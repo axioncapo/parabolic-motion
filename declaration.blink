@@ -1,0 +1,75 @@
+option ClientOutput = "src/shared/Connections/client_connections.luau"
+option ServerOutput = "src/shared/Connections/server_connections.luau"
+
+type guid = string(12)
+
+struct SummonBasketBallPayload {
+    guid: guid,
+    startPos: CFrame,
+}
+
+struct RenderCurvePayload {
+    guid: guid,
+    position: CFrame,
+    state: string(3..12)
+}
+
+struct ThrowBall {
+    from: CFrame,
+    power: i16(1..10)
+}
+
+struct UpdateBasketBallPayload {
+    guid: guid,
+    newPos: CFrame,
+}
+
+struct CleanBasketBallPayload {
+    guid: guid
+}
+
+struct ActiveBasketBallNativePhysicsPayload {
+    guid: guid
+}
+
+event SummonBasketBall {
+    From: Server,
+    Type: Reliable,
+    Call: SingleSync,
+    Data: SummonBasketBallPayload,
+}
+
+event UpdateBasketBall {
+    From: Server,
+    Type: Unreliable,
+    Call: Polling,
+    Data: UpdateBasketBallPayload,
+}
+
+event CleanBasketBall {
+    From: Server,
+    Type: Reliable,
+    Call: SingleAsync, 
+    Data: CleanBasketBallPayload
+}
+
+event RenderCurvePoint {
+    From: Server,
+    Type: Reliable,
+    Call: Polling, 
+    Data: RenderCurvePayload
+}
+
+event ActiveBasketBallNativePhysics {
+    From: Server,
+    Type: Reliable,
+    Call: SingleSync, 
+    Data: ActiveBasketBallNativePhysicsPayload
+}
+
+event ThrowBall {
+    From: Client,
+    Type: Unreliable,
+    Call: SingleAsync, 
+    Data: ThrowBall
+}
